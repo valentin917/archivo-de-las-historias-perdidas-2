@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentin Merino | El archivo de las historias perdidas</title>
+    <meta name="description" content="Página oficial de novelas de ficción histórica y steampunk de Valentin Merino.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #1a1a1a;
+            --accent: #c5a059;
+            --paper: #fdfbf7;
+            --bg-dark: #f4f1ea;
+            --transition: all 0.4s ease;
+            --wax-red: #8b1a1a;
+        }
+
+        body.reading-mode {
+            background-image: none !important;
+            background-color: #ffffff !important;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Cormorant Garamond', serif;
+            background-color: var(--paper);
+            color: var(--primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+            background-image: url('https://www.transparenttextures.com/patterns/natural-paper.png');
+            transition: background 0.3s ease;
+        }
+
+        /* --- Barra de Navegación --- */
+        nav.main-nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            padding: 20px;
+            background: rgba(253, 251, 247, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 999;
+            border-bottom: 1px solid rgba(197, 160, 89, 0.2);
+        }
+
+        nav.main-nav a {
+            text-decoration: none;
+            color: var(--primary);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: var(--transition);
+        }
+
+        nav.main-nav a:hover { color: var(--accent); }
+
+        .reading-mode-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 50px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.7rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        /* --- Engranajes Animados --- */
+        .gear {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            fill: var(--accent);
+            opacity: 0.2;
+            animation: spin 10s linear infinite;
+            z-index: 1;
+        }
+        .gear-1 { top: -40px; left: -40px; }
+        .gear-2 { top: 20px; right: -30px; animation-direction: reverse; width: 60px; }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* --- Efecto de Vapor --- */
+        .steam {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0; left: 0;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+            filter: blur(30px);
+            animation: steamMove 8s infinite alternate;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes steamMove {
+            from { transform: translate(-15%, 10%) scale(1); opacity: 0.2; }
+            to { transform: translate(15%, -10%) scale(1.2); opacity: 0.5; }
+        }
+
+        /* --- UI: Idioma --- */
+        .lang-switcher {
+            position: fixed;
+            top: 80px;
+            right: 30px;
+            z-index: 1000;
+            background: rgba(253, 251, 247, 0.8);
+            padding: 5px;
+            border-radius: 2px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(197, 160, 89, 0.3);
+        }
+
+        .lang-switcher button {
+            background: none;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+            transition: var(--transition);
+        }
+
+        .lang-switcher button.active { color: var(--accent); font-weight: bold; }
+        .lang-switcher button:hover { color: var(--accent); }
+
+        /* --- Hero Section --- */
+        header {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(rgba(253, 251, 247, 0.7), rgba(253, 251, 247, 0.7)), 
+                        url('https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&q=80&w=1920');
+            background-size: cover;
+            background-attachment: fixed;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .typewriter {
+            overflow: hidden;
+            border-right: .15em solid var(--accent);
+            white-space: nowrap;
+            margin: 0 auto;
+            letter-spacing: 4px;
+            animation: typing 3.5s steps(30, end), blink-caret .75s step-end infinite;
+            max-width: fit-content;
+        }
+
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--accent); }
+        }
+
+        h1 { font-size: clamp(1.8rem, 5vw, 4.5rem); letter-spacing: 4px; transition: opacity 0.5s; position: relative; z-index: 2; }
+        .subtitle { font-family: 'Montserrat', sans-serif; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 5px; color: var(--accent); margin-bottom: 20px; position: relative; z-index: 2; }
+
+        /* --- Secciones de Novelas --- */
+        .novel-container {
+            padding: 120px 10%;
+            display: flex;
+            align-items: center;
+            gap: 80px;
+            min-height: 100vh;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s ease-out;
+            position: relative;
+        }
+
+        .novel-container.visible { opacity: 1; transform: translateY(0); }
+
+        #novel-clocks { background-color: var(--bg-dark); flex-direction: row; }
+        #novel-routes { flex-direction: row-reverse; }
+
+        .novel-image { flex: 1; position: relative; overflow: hidden; }
+        .novel-image img {
+            width: 100%;
+            box-shadow: 25px 25px 50px rgba(0,0,0,0.15);
+            border: 1px solid rgba(0,0,0,0.05);
+            transition: var(--transition);
+            filter: sepia(0.8) contrast(1.1) brightness(0.9);
+        }
+        .novel-image:hover img { 
+            transform: translateY(-10px) scale(1.02); 
+            filter: sepia(0) contrast(1) brightness(1);
+        }
+
+        .novel-info { flex: 1.2; z-index: 2; }
+        .novel-title { font-size: 3.5rem; margin-bottom: 15px; line-height: 1.1; }
+        
+        .novel-synopsis { 
+            display: none;
+            font-size: 1.3rem; 
+            margin-bottom: 30px; 
+            color: #555; 
+            font-style: italic; 
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .testimonial {
+            border-left: 3px solid var(--accent);
+            padding-left: 20px;
+            margin-bottom: 30px;
+            font-size: 1rem;
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        .btn-discover {
+            display: inline-block;
+            padding: 12px 35px;
+            border: 1px solid var(--primary);
+            text-decoration: none;
+            color: var(--primary);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: var(--transition);
+            cursor: pointer;
+            background: none;
+        }
+        .btn-discover:hover { background: var(--primary); color: white; }
+
+        /* --- Sello de Cera (Wax Seal) --- */
+        .wax-seal {
+            background-color: var(--wax-red);
+            color: #f4f1ea !important;
+            border: none !important;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            padding: 0 !important;
+            font-size: 0.65rem !important;
+            font-weight: bold;
+            box-shadow: 4px 4px 10px rgba(0,0,0,0.4), inset 2px 2px 5px rgba(255,255,255,0.2);
+            position: relative;
+            margin-top: 20px;
+            border: 2px solid #631212 !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .wax-seal:hover {
+            transform: scale(1.05) rotate(5deg);
+            background-color: #a32020;
+            box-shadow: 6px 6px 15px rgba(0,0,0,0.5);
+        }
+
+        /* --- Nueva Sección: El Custodio --- */
+        #author {
+            padding: 100px 20%;
+            text-align: center;
+            background-color: var(--paper);
+            position: relative;
+            overflow: hidden;
+        }
+        .author-text { font-size: 1.2rem; max-width: 800px; margin: 0 auto 20px auto; position: relative; z-index: 2; }
+        .author-mail { 
+            display: block;
+            color: var(--accent);
+            text-decoration: none;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            transition: var(--transition);
+            position: relative;
+            z-index: 2;
+        }
+        .author-mail:hover { opacity: 0.7; }
+
+        /* --- Cronología Interactiva CSS --- */
+        .timeline-wrapper {
+            width: 100%;
+            margin-top: 50px;
+            padding: 20px;
+            border-top: 1px double var(--accent);
+        }
+        .timeline {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 0;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            width: 2px;
+            height: 100%;
+            background: var(--accent);
+            transform: translateX(-50%);
+        }
+        .timeline-item {
+            margin-bottom: 40px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .timeline-content {
+            width: 45%;
+            padding: 20px;
+            background: var(--paper);
+            border: 1px solid rgba(197, 160, 89, 0.3);
+            position: relative;
+        }
+        .timeline-item:nth-child(even) { flex-direction: row-reverse; }
+        .timeline-date {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
+            color: var(--accent);
+            font-size: 1.2rem;
+            background: var(--bg-dark);
+            padding: 5px 15px;
+            border-radius: 20px;
+            z-index: 2;
+        }
+        .timeline-tag {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-bottom: 10px;
+            color: #888;
+        }
+        .tag-real { color: var(--primary); font-weight: bold; }
+        .tag-fiction { color: var(--wax-red); font-weight: bold; }
+
+        /* --- Contacto (Newsletter) --- */
+        .contact-section {
+            padding: 100px 10%;
+            background-color: var(--bg-dark);
+            text-align: center;
+        }
+        .contact-card {
+            background: var(--paper);
+            padding: 50px;
+            max-width: 600px;
+            margin: 0 auto;
+            border: 1px solid rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        input, textarea {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            background: transparent;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+        }
+
+        footer {
+            padding: 80px 20px;
+            background: var(--primary);
+            color: var(--paper);
+            text-align: center;
+        }
+        footer p { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; letter-spacing: 2px; opacity: 0.7; }
+
+        @media (max-width: 900px) {
+            .novel-container { flex-direction: column !important; text-align: center; padding: 60px 5%; }
+            .novel-title { font-size: 2.5rem; }
+            .gear { display: none; }
+            .typewriter { white-space: normal; border: none; animation: none; }
+            nav.main-nav { gap: 10px; padding: 10px; }
+            nav.main-nav a { font-size: 0.6rem; }
+            .timeline::before { left: 20px; }
+            .timeline-item { flex-direction: column !important; align-items: flex-start; padding-left: 40px; }
+            .timeline-content { width: 100%; margin-bottom: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="main-nav">
+        <a href="#" data-key="nav-home">Inicio</a>
+        <a href="#novel-clocks" data-key="nav-books">Libros</a>
+        <a href="#author" data-key="nav-author">Autor</a>
+        <a href="#curiosities" data-key="nav-curiosities">Archivo</a>
+    </nav>
+
+    <button class="reading-mode-toggle" onclick="toggleReadingMode()" data-key="btn-reading">Modo Lectura</button>
+
+    <svg class="gear gear-1" viewBox="0 0 100 100">
+        <path d="M94.5,41.2l-8.4-1.1c-0.6-2.1-1.6-4-2.8-5.8l5.2-6.7c0.8-1,0.7-2.5-0.3-3.4l-6.4-6.4c-0.9-0.9-2.4-1-3.4-0.3l-6.7,5.2 c-1.8-1.2-3.7-2.1-5.8-2.8l-1.1-8.4c-0.2-1.2-1.2-2.1-2.4-2.1h-9.1c-1.2,0-2.2,0.9-2.4,2.1l-1.1,8.4c-2.1,0.6-4,1.6-5.8,2.8 l-6.7-5.2c-1-0.8-2.5-0.7-3.4,0.3l-6.4,6.4c-0.9,0.9-1,2.4-0.3,3.4l5.2,6.7c-1.2,1.8-2.1,3.7-2.8,5.8l-8.4,1.1 c-1.2,0.2-2.1,1.2-2.1,2.4v9.1c0,1.2,0.9,2.2,2.1,2.4l8.4,1.1c0.6,2.1,1.6,4,2.8,5.8l-5.2,6.7c-0.8,1-0.7,2.5,0.3,3.4l6.4,6.4 c0.9,0.9,2.4,1,3.4,0.3l6.7-5.2c1.8,1.2,3.7,2.1,5.8,2.8l1.1,8.4c0.2,1.2,1.2,2.1,2.4,2.1h9.1c1.2,0,2.2-0.9,2.4-2.1l1.1-8.4 c2.1-0.6,4-1.6,5.8-2.8l6.7,5.2c1,0.8,2.5,0.7,3.4-0.3l6.4-6.4c0.9-0.9,1-2.4,0.3-3.4l-5.2-6.7c1.2-1.8,2.1-3.7,2.8-5.8l8.4-1.1 c1.2-0.2,2.1-1.2,2.1-2.4v-9.1C96.6,42.4,95.7,41.4,94.5,41.2z M50,63.4c-7.4,0-13.4-6-13.4-13.4c0-7.4,6-13.4,13.4-13.4 s13.4,6,13.4,13.4C63.4,57.4,57.4,63.4,50,63.4z"/>
+    </svg>
+    <svg class="gear gear-2" viewBox="0 0 100 100">
+        <path d="M94.5,41.2l-8.4-1.1c-0.6-2.1-1.6-4-2.8-5.8l5.2-6.7c0.8-1,0.7-2.5-0.3-3.4l-6.4-6.4c-0.9-0.9-2.4-1-3.4-0.3l-6.7,5.2 c-1.8-1.2-3.7-2.1-5.8-2.8l-1.1-8.4c-0.2-1.2-1.2-2.1-2.4-2.1h-9.1c-1.2,0-2.2,0.9-2.4,2.1l-1.1,8.4c-2.1,0.6-4,1.6-5.8,2.8 l-6.7-5.2c-1-0.8-2.5-0.7-3.4,0.3l-6.4,6.4c-0.9,0.9-1,2.4-0.3,3.4l5.2,6.7c-1.2,1.8-2.1,3.7-2.8,5.8l-8.4,1.1 c-1.2,0.2-2.1,1.2-2.1,2.4v9.1c0,1.2,0.9,2.2,2.1,2.4l8.4,1.1c0.6,2.1,1.6,4,2.8,5.8l-5.2,6.7c-0.8,1-0.7,2.5,0.3,3.4l6.4,6.4 c0.9,0.9,2.4,1,3.4,0.3l6.7-5.2c1.8,1.2,3.7,2.1,5.8,2.8l1.1,8.4c0.2,1.2,1.2,2.1,2.4,2.1h9.1c1.2,0,2.2-0.9,2.4-2.1l1.1-8.4 c2.1-0.6,4-1.6,5.8-2.8l6.7,5.2c1,0.8,2.5,0.7,3.4-0.3l6.4-6.4c0.9-0.9,1-2.4,0.3-3.4l-5.2-6.7c1.2-1.8,2.1-3.7,2.8-5.8l8.4-1.1 c1.2-0.2,2.1-1.2,2.1-2.4v-9.1C96.6,42.4,95.7,41.4,94.5,41.2z M50,63.4c-7.4,0-13.4-6-13.4-13.4c0-7.4,6-13.4,13.4-13.4 s13.4,6,13.4,13.4C63.4,57.4,57.4,63.4,50,63.4z"/>
+    </svg>
+
+    <nav class="lang-switcher">
+        <button onclick="changeLang('es')" id="btn-es" class="active">ES</button>
+        <button onclick="changeLang('en')" id="btn-en">EN</button>
+        <button onclick="changeLang('de')" id="btn-de">DE</button>
+        <button onclick="changeLang('fr')" id="btn-fr">FR</button>
+    </nav>
+
+    <header>
+        <p class="subtitle" data-key="header-sub">Valentin Merino</p>
+        <h1 class="typewriter" data-key="header-title">El archivo de las historias perdidas</h1>
+    </header>
+
+    <section id="novel-clocks" class="novel-container">
+        <div class="novel-image">
+            <img src="https://lh3.googleusercontent.com/d/1BosniG1Qz6AHjYvICTmigWgpd3BlKevT" alt="Bajo el mismo tic-tac">
+        </div>
+        <div class="novel-info">
+            <h2 class="novel-title" data-key="n1-title">Bajo el mismo tic-tac</h2>
+            <div class="testimonial" data-key="n1-quote">"Un latido que desafía a la industria."</div>
+            <p class="novel-synopsis" data-key="n1-synopsis">
+                En un Londres victoriano donde el tiempo es oro, Edmund Harrow descubre que los latidos de un corazón artesano no pueden ser silenciados.
+            </p>
+            <button class="btn-discover" onclick="toggleSynopsis(this)" data-key="btn-text">Descubrir Obra</button>
+        </div>
+    </section>
+
+    <section id="novel-routes" class="novel-container">
+        <div class="novel-image">
+            <img src="https://lh3.googleusercontent.com/d/1tI1HsEIB8JWPLSqEH7OHi94B_yRkrHP6" alt="La ruta que no existe">
+        </div>
+        <div class="novel-info">
+            <h2 class="novel-title" data-key="n2-title">La ruta que no existe</h2>
+            <div class="testimonial" data-key="n2-quote">"El mapa termina donde empieza la libertad."</div>
+            <p class="novel-synopsis" data-key="n2-synopsis">
+                Julien de Sainte-Colombe creía que el mundo estaba domado por la tinta. El mar le enseñó que la libertad no aparece en los mapas oficiales.
+            </p>
+            <button class="btn-discover" onclick="toggleSynopsis(this)" data-key="btn-text">Descubrir Obra</button>
+        </div>
+    </section>
+
+    <section id="author" class="novel-container visible">
+        <div class="steam"></div>
+        <div class="author-info" style="width: 100%;">
+            <p class="subtitle" data-key="auth-sub">El Custodio</p>
+            <h2 class="novel-title" data-key="auth-title">Valentin Merino</h2>
+            <p class="author-text" data-key="auth-text">
+                Nacido en San Rafael, Mendoza, en 2008. Estudiante del Colegio San Antonio de Padua, Merino es un rescatista de realidades alternativas y cronista de lo que nunca fue. Dedicado a rescatar fragmentos de historia bajo la lente del engranaje y el vapor.
+            </p>
+            <a href="mailto:valentinmm456@gmail.com" class="author-mail">valentinmm456@gmail.com</a>
+        </div>
+    </section>
+
+    <section id="curiosities" class="novel-container visible" style="background-color: var(--bg-dark); flex-direction: column; text-align: left;">
+        <p class="subtitle" style="text-align: center; width: 100%;" data-key="cur-sub">Fragmentos del Tiempo</p>
+        <h2 class="novel-title" style="text-align: center; width: 100%; margin-bottom: 50px;" data-key="cur-title">Curiosidades de la Época</h2>
+        
+        <div style="display: flex; gap: 40px; flex-wrap: wrap; width: 100%;">
+            <div style="flex: 1; min-width: 300px; padding: 20px; border: 1px ridge var(--accent);">
+                <h3 style="color: var(--accent); font-family: 'Montserrat', sans-serif; letter-spacing: 2px;" data-key="cur-l-title">LONDRES, 1899</h3>
+                <p style="font-style: italic; margin-top: 10px;" data-key="cur-l-sub">El último latido de un siglo.</p>
+                <ul style="margin-top: 20px; list-style: none;">
+                    <li style="margin-bottom: 15px;" data-key="cur-l-1">📜 <b>El Tiempo Industrial:</b> Antes de la producción en serie, los relojes eran piezas únicas con "alma". En 1899, la industria empezó a tratar el tiempo como una mercancía fría.</li>
+                    <li style="margin-bottom: 15px;" data-key="cur-l-2">🚂 <b>Vapor y Hollín:</b> La neblina de Londres no era solo clima; era el aliento de miles de máquinas de carbón que nunca descansaban.</li>
+                </ul>
+            </div>
+
+            <div style="flex: 1; min-width: 300px; padding: 20px; border: 1px ridge var(--accent);">
+                <h3 style="color: var(--accent); font-family: 'Montserrat', sans-serif; letter-spacing: 2px;" data-key="cur-f-title">FRANCIA, 1750</h3>
+                <p style="font-style: italic; margin-top: 10px;" data-key="cur-f-sub">Donde el mapa termina.</p>
+                <ul style="margin-top: 20px; list-style: none;">
+                    <li style="margin-bottom: 15px;" data-key="cur-f-1">📍 <b>Geometría Sagrada:</b> En esta época, un cartógrafo era mitad científico y mitad artista. Los mapas eran secretos de estado.</li>
+                    <li style="margin-bottom: 15px;" data-key="cur-f-2">🌊 <b>Rutas Fantasma:</b> Existían islas en los mapas que nunca fueron reales, fruto de espejismos o errores de cálculo de marineros cansados.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="timeline-wrapper">
+            <h3 class="subtitle" style="text-align: center; margin-bottom: 30px;" data-key="tm-title">Cronología Convergente</h3>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <span class="timeline-tag tag-real" data-key="tm-r">Realidad</span>
+                        <h4 data-key="tm-1750-rt">Expansión Colonial Francesa</h4>
+                        <p data-key="tm-1750-rd">Francia compite por el control de las rutas marítimas en el Caribe y la India.</p>
+                    </div>
+                    <div class="timeline-date">1750</div>
+                    <div class="timeline-content">
+                        <span class="timeline-tag tag-fiction" data-key="tm-f">Ficción</span>
+                        <h4 data-key="tm-1750-ft">La Ruta que no Existe</h4>
+                        <p data-key="tm-1750-fd">Julien de Sainte-Colombe desafía la cartografía oficial al descubrir que la libertad no tiene coordenadas.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <span class="timeline-tag tag-real" data-key="tm-r">Realidad</span>
+                        <h4 data-key="tm-1899-rt">El Ocaso Victoriano</h4>
+                        <p data-key="tm-1899-rd">Londres se consolida como el corazón de la Revolución Industrial y el comercio mundial.</p>
+                    </div>
+                    <div class="timeline-date">1899</div>
+                    <div class="timeline-content">
+                        <span class="timeline-tag tag-fiction" data-key="tm-f">Ficción</span>
+                        <h4 data-key="tm-1899-ft">Bajo el mismo Tic-Tac</h4>
+                        <p data-key="tm-1899-fd">Edmund Harrow lucha contra la deshumanización del tiempo en un Londres que ha olvidado el latido del artesano.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact-section">
+        <div class="contact-card">
+            <h3 class="subtitle" data-key="mail-title">Correspondencia</h3>
+            <p style="margin-bottom: 20px;" data-key="mail-sub">Recibe noticias desde el archivo.</p>
+            
+            <form action="https://formspree.io/f/valentinmm456@gmail.com" method="POST">
+                <input type="email" name="email" placeholder="E-mail..." required>
+                <textarea name="message" placeholder="Tu mensaje..." style="min-height: 100px;"></textarea>
+                <button type="submit" class="btn-discover wax-seal" data-key="btn-send">Enviar Mensaje</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <p data-key="footer">© 2024 EL ARCHIVO DE LAS HISTORIAS PERDIDAS - TODOS LOS DERECHOS RESERVADOS</p>
+    </footer>
+
+    <script>
+        const translations = {
+            es: {
+                "nav-home": "Inicio", "nav-books": "Libros", "nav-author": "Autor", "nav-curiosities": "Archivo",
+                "btn-reading": "Modo Lectura",
+                "header-sub": "Valentin Merino",
+                "header-title": "El archivo de las historias perdidas",
+                "n1-title": "Bajo el mismo tic-tac",
+                "n1-synopsis": "En un Londres victoriano donde el tiempo es oro y el oro es poder, Edmund Harrow descubre que los latidos de un corazón artesano no pueden ser silenciados por la maquinaria de la avaricia.",
+                "n1-quote": "“Un latido que desafía a la industria.”",
+                "n2-title": "La ruta que no existe",
+                "n2-synopsis": "Julien de Sainte-Colombe creía que el mundo estaba domado por la tinta y la geometría. Un viaje cartográfico hacia los límites de lo conocido en busca de la libertad.",
+                "n2-quote": "“El mapa termina donde empieza la libertad.”",
+                "auth-sub": "El Custodio",
+                "auth-title": "Valentin Merino",
+                "auth-text": "Nacido en San Rafael, Mendoza, en 2008. Estudiante del Colegio San Antonio de Padua, Merino es un rescatista de realidades alternativas y cronista de lo que nunca fue. Dedicado a rescatar fragmentos de historia bajo la lente del engranaje y el vapor.",
+                "cur-sub": "Fragmentos del Tiempo",
+                "cur-title": "Curiosidades de la Época",
+                "cur-l-title": "LONDRES, 1899",
+                "cur-l-sub": "El último latido de un siglo.",
+                "cur-l-1": "📜 <b>El Tiempo Industrial:</b> Antes de la producción en serie, los relojes eran piezas únicas con 'alma'.",
+                "cur-l-2": "🚂 <b>Vapor y Hollín:</b> La neblina de Londres era el aliento de miles de máquinas de carbón.",
+                "cur-f-title": "FRANCIA, 1750",
+                "cur-f-sub": "Donde el mapa termina.",
+                "cur-f-1": "📍 <b>Geometría Sagrada:</b> En esta época, los mapas eran secretos de estado.",
+                "cur-f-2": "🌊 <b>Rutas Fantasma:</b> Existían islas en los mapas que nunca fueron reales.",
+                "tm-title": "Cronología Convergente",
+                "tm-r": "Realidad", "tm-f": "Ficción",
+                "tm-1750-rt": "Expansión Colonial Francesa",
+                "tm-1750-rd": "Francia compite por el control de las rutas marítimas en el Caribe.",
+                "tm-1750-ft": "La Ruta que no Existe",
+                "tm-1750-fd": "Julien de Sainte-Colombe desafía la cartografía oficial.",
+                "tm-1899-rt": "El Ocaso Victoriano",
+                "tm-1899-rd": "Londres se consolida como el corazón de la Revolución Industrial.",
+                "tm-1899-ft": "Bajo el mismo Tic-Tac",
+                "tm-1899-fd": "Edmund Harrow lucha contra la deshumanización del tiempo.",
+                "mail-title": "Correspondencia",
+                "mail-sub": "Recibe noticias desde el archivo.",
+                "btn-text": "Descubrir Obra",
+                "btn-close": "Cerrar",
+                "btn-send": "Enviar Mensaje",
+                "footer": "© 2024 EL ARCHIVO DE LAS HISTORIAS PERDIDAS - TODOS LOS DERECHOS RESERVADOS"
+            },
+            en: {
+                "nav-home": "Home", "nav-books": "Books", "nav-author": "Author", "nav-curiosities": "Archive",
+                "btn-reading": "Reading Mode",
+                "header-sub": "Valentin Merino",
+                "header-title": "The Archive of Lost Stories",
+                "n1-title": "Under the Same Tick-Tock",
+                "n1-synopsis": "In a Victorian London where time is gold, Edmund Harrow discovers that the heartbeat of a craftsman cannot be silenced.",
+                "n1-quote": "“A heartbeat that defies industry.”",
+                "n2-title": "The Route that Doesn't Exist",
+                "n2-synopsis": "Julien de Sainte-Colombe believed the world was tamed by ink. A cartographic journey to the limits of the known.",
+                "n2-quote": "“The map ends where freedom begins.”",
+                "auth-sub": "The Custodian",
+                "auth-title": "Valentin Merino",
+                "auth-text": "Born in San Rafael, Mendoza (2008). Merino is a rescuer of alternative realities and chronicler of what never was.",
+                "cur-sub": "Fragments of Time",
+                "cur-title": "Curiosities of the Era",
+                "cur-l-title": "LONDON, 1899",
+                "cur-l-sub": "The last beat of a century.",
+                "cur-l-1": "📜 <b>Industrial Time:</b> Watches were unique pieces with a 'soul'.",
+                "cur-l-2": "🚂 <b>Steam and Soot:</b> London's fog was the breath of coal machines.",
+                "cur-f-title": "FRANCE, 1750",
+                "cur-f-sub": "Where the map ends.",
+                "cur-f-1": "📍 <b>Sacred Geometry:</b> In this era, maps were state secrets.",
+                "cur-f-2": "🌊 <b>Ghost Routes:</b> There were islands on maps that were never real.",
+                "tm-title": "Convergent Timeline",
+                "tm-r": "Reality", "tm-f": "Fiction",
+                "tm-1750-rt": "French Colonial Expansion",
+                "tm-1750-rd": "France competes for control of maritime routes in the Caribbean.",
+                "tm-1750-ft": "The Route that Doesn't Exist",
+                "tm-1750-fd": "Julien de Sainte-Colombe challenges official cartography.",
+                "tm-1899-rt": "The Victorian Sunset",
+                "tm-1899-rd": "London becomes the heart of the Industrial Revolution.",
+                "tm-1899-ft": "Under the Same Tick-Tock",
+                "tm-1899-fd": "Edmund Harrow fights against the dehumanization of time.",
+                "mail-title": "Correspondence",
+                "mail-sub": "Receive news from the archive.",
+                "btn-text": "Discover Work",
+                "btn-close": "Close",
+                "btn-send": "Send Message",
+                "footer": "© 2024 THE ARCHIVE OF LOST STORIES - ALL RIGHTS RESERVED"
+            },
+            de: {
+                "nav-home": "Startseite", "nav-books": "Bücher", "nav-author": "Autor", "nav-curiosities": "Archiv",
+                "btn-reading": "Lesemodus",
+                "header-sub": "Valentin Merino",
+                "header-title": "Das Archiv der verlorenen Geschichten",
+                "n1-title": "Unter dem gleichen Ticken",
+                "n1-synopsis": "In einem viktorianischen London, in dem Zeit Gold ist, entdeckt Edmund Harrow, dass der Herzschlag eines Handwerkers nicht durch die Maschinerie der Gier zum Schweigen gebracht werden kann.",
+                "n1-quote": "„Ein Herzschlag, der der Industrie trotzt.“",
+                "n2-title": "Die Route, die es nicht gibt",
+                "n2-synopsis": "Julien de Sainte-Colombe glaubte, die Welt sei durch Tinte und Geometrie gezähmt. Eine kartografische Reise an die Grenzen des Bekannten auf der Suche nach Freiheit.",
+                "n2-quote": "„Die Karte endet dort, wo die Freiheit beginnt.“",
+                "auth-sub": "Der Kustos",
+                "auth-title": "Valentin Merino",
+                "auth-text": "Geboren 2008 in San Rafael, Mendoza. Merino ist ein Retter alternativer Realitäten und Chronist dessen, was nie war. Er widmet sich der Rettung von Geschichtsfragmenten unter der Linse von Zahnrad und Dampf.",
+                "cur-sub": "Fragmente der Zeit",
+                "cur-title": "Kuriositäten der Epoche",
+                "cur-l-title": "LONDON, 1899",
+                "cur-l-sub": "Der letzte Herzschlag eines Jahrhunderts.",
+                "cur-l-1": "📜 <b>Industrielle Zeit:</b> Vor der Serienproduktion waren Uhren Einzelstücke mit 'Seele'.",
+                "cur-l-2": "🚂 <b>Dampf und Ruß:</b> Der Londoner Nebel war der Atem von Tausenden von Kohlemaschinen.",
+                "cur-f-title": "FRANKREICH, 1750",
+                "cur-f-sub": "Wo die Karte endet.",
+                "cur-f-1": "📍 <b>Heilige Geometrie:</b> In dieser Ära waren Karten Staatsgeheimnisse.",
+                "cur-f-2": "🌊 <b>Geisterrouten:</b> Es gab Inseln auf Karten, die nie existierten, Ergebnis von Luftspiegelungen.",
+                "tm-title": "Konvergente Chronologie",
+                "tm-r": "Realität", "tm-f": "Fiktion",
+                "tm-1750-rt": "Französische Koloniale Expansion",
+                "tm-1750-rd": "Frankreich konkurriert um die Kontrolle der Seewege in der Karibik.",
+                "tm-1750-ft": "Die Route, die es nicht gibt",
+                "tm-1750-fd": "Julien de Sainte-Colombe fordert die offizielle Kartografie heraus.",
+                "tm-1899-rt": "Der viktorianische Untergang",
+                "tm-1899-rd": "London festigt sich als Herz der industriellen Revolution.",
+                "tm-1899-ft": "Unter dem gleichen Ticken",
+                "tm-1899-fd": "Edmund Harrow kämpft gegen die Entmenschlichung der Zeit.",
+                "mail-title": "Korrespondenz",
+                "mail-sub": "Erhalten Sie Nachrichten aus dem Archiv.",
+                "btn-text": "Werk entdecken",
+                "btn-close": "Schließen",
+                "btn-send": "Nachricht senden",
+                "footer": "© 2024 DAS ARCHIV DER VERLORENEN GESCHICHTEN - ALLE RECHTE VORBEHALTEN"
+            },
+            fr: {
+                "nav-home": "Accueil", "nav-books": "Livres", "nav-author": "Auteur", "nav-curiosities": "Archives",
+                "btn-reading": "Mode Lecture",
+                "header-sub": "Valentin Merino",
+                "header-title": "L'archive des histoires perdues",
+                "n1-title": "Sous le même tic-tac",
+                "n1-synopsis": "Dans un Londres victorien où le temps est de l'or, Edmund Harrow découvre que les battements d'un cœur artisan ne peuvent être réduits au silence par la machinerie de l'avarice.",
+                "n1-quote": "« Un battement de cœur qui défie l'industrie. »",
+                "n2-title": "La route qui n'existe pas",
+                "n2-synopsis": "Julien de Sainte-Colombe croyait que le monde était dompté par l'encre et la géométrie. Un voyage cartographique aux limites de l'inconnu en quête de liberté.",
+                "n2-quote": "« La carte s'arrête là où la liberté commence. »",
+                "auth-sub": "Le Gardien",
+                "auth-title": "Valentin Merino",
+                "auth-text": "Né à San Rafael, Mendoza, en 2008. Merino est un sauveteur de réalités alternatives et chroniqueur de ce qui n'a jamais été. Dédié à sauver des fragments d'histoire sous l'angle de l'engrenage et de la vapeur.",
+                "cur-sub": "Fragments du Temps",
+                "cur-title": "Curiosités de l'Époque",
+                "cur-l-title": "LONDRES, 1899",
+                "cur-l-sub": "Le dernier battement d'un siècle.",
+                "cur-l-1": "📜 <b>Le Temps Industriel:</b> Avant la production en série, les montres étaient des pièces uniques avec une 'âme'.",
+                "cur-l-2": "🚂 <b>Vapeur et Suie:</b> Le brouillard de Londres était le souffle de milliers de machines à charbon.",
+                "cur-f-title": "FRANCE, 1750",
+                "cur-f-sub": "Là où la carte s'arrête.",
+                "cur-f-1": "📍 <b>Géométrie Sacrée:</b> À cette époque, les cartes étaient des secrets d'État.",
+                "cur-f-2": "🌊 <b>Routes Fantômes:</b> Il existait des îles sur les cartes qui n'ont jamais été réelles.",
+                "tm-title": "Chronologie Convergente",
+                "tm-r": "Réalité", "tm-f": "Fiction",
+                "tm-1750-rt": "Expansion Coloniale Française",
+                "tm-1750-rd": "La France concourt pour le contrôle des routes maritimes dans les Caraïbes.",
+                "tm-1750-ft": "La Route qui n'existe pas",
+                "tm-1750-fd": "Julien de Sainte-Colombe défie la cartographie officielle.",
+                "tm-1899-rt": "Le Crépuscule Victorien",
+                "tm-1899-rd": "Londres se consolide comme le cœur de la Révolution Industrielle.",
+                "tm-1899-ft": "Sous le même Tic-Tac",
+                "tm-1899-fd": "Edmund Harrow lutte contre la déshumanización du temps.",
+                "mail-title": "Correspondance",
+                "mail-sub": "Recevez des nouvelles de l'archive.",
+                "btn-text": "Découvrir l'Œuvre",
+                "btn-close": "Fermer",
+                "btn-send": "Envoyer Message",
+                "footer": "© 2024 L'ARCHIVE DES HISTOIRES PERDUES - TOUS DROITS RÉSERVÉS"
+            }
+        };
+
+        function toggleReadingMode() {
+            document.body.classList.toggle('reading-mode');
+        }
+
+        function toggleSynopsis(btn) {
+            const synopsis = btn.previousElementSibling;
+            const isVisible = synopsis.style.display === "block";
+            const lang = document.querySelector('.lang-switcher button.active').id.split('-')[1];
+            
+            synopsis.style.display = isVisible ? "none" : "block";
+            btn.innerText = !isVisible ? (translations[lang]["btn-close"] || "Close") : translations[lang]["btn-text"];
+        }
+
+        function changeLang(lang) {
+            document.querySelectorAll('[data-key]').forEach(el => { el.style.opacity = '0'; });
+            setTimeout(() => {
+                document.querySelectorAll('[data-key]').forEach(el => {
+                    const key = el.getAttribute('data-key');
+                    if (translations[lang] && translations[lang][key]) {
+                        el.innerHTML = translations[lang][key];
+                    }
+                    el.style.opacity = '1';
+                });
+                document.querySelectorAll('.lang-switcher button').forEach(btn => btn.classList.remove('active'));
+                document.getElementById(`btn-${lang}`).classList.add('active');
+            }, 400);
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.novel-container').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
